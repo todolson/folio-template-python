@@ -2,7 +2,6 @@ import argparse
 import configparser
 import logging
 import sys
-from email.policy import default
 
 
 def read_config(filename):
@@ -22,14 +21,14 @@ def parse_args():
     parser.add_argument(
         "-i",
         "--infile",
-        help="Input file",
+        help="Input file (default: stdin)",
         default=sys.stdin,
         type=argparse.FileType("r"),
     )
     parser.add_argument(
         "-o",
         "--outfile",
-        help="Output file",
+        help="Output file (truncate if exists, default: stdout)",
         default=sys.stdout,
         type=argparse.FileType("w"),
     )
@@ -52,15 +51,23 @@ def process_data(data):
     return data
 
 
+def write_result(out, output):
+    """Placeholder for writing output"""
+    out.write(output)
+
+
+def main_loop(infile, outfile):
+    for line in infile:
+        data = parse_data(line)
+        result = process_data(data)
+        write_result(outfile, result)
+
+
 def main():
     args = parse_args()
     config = read_config(args.config_file)
     # Logic or function to override config values from the command line arguments would go here
-
-    for line in args.infile:
-        data = parse_data(line)
-        process_data(data)
-
+    main_loop(args.infile, args.outfile)
     return 0
 
 
