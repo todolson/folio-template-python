@@ -3,6 +3,8 @@ import configparser
 import logging
 import sys
 
+from folioclient import FolioClient
+
 
 def read_config(filename):
     """Parse the named config file and return an config object"""
@@ -46,7 +48,7 @@ def parse_data(line):
     return line
 
 
-def process_data(data):
+def process_data(client, data):
     """Placeholder for processing the data"""
     return data
 
@@ -56,10 +58,10 @@ def write_result(out, output):
     out.write(output)
 
 
-def main_loop(infile, outfile):
+def main_loop(client, infile, outfile):
     for line in infile:
         data = parse_data(line)
-        result = process_data(data)
+        result = process_data(client, data)
         write_result(outfile, result)
 
 
@@ -67,7 +69,15 @@ def main():
     args = parse_args()
     config = read_config(args.config_file)
     # Logic or function to override config values from the command line arguments would go here
-    main_loop(args.infile, args.outfile)
+
+    client = FolioClient(
+        config["Okapi"]["okapi_url"],
+        config["Okapi"]["tenant_id"],
+        config["Okapi"]["username"],
+        config["Okapi"]["password"],
+    )
+
+    main_loop(client, args.infile, args.outfile)
     return 0
 
 
