@@ -6,11 +6,23 @@ import sys
 from folioclient import FolioClient
 
 
-def read_config(filename):
+def error_exit(status, msg):
+    sys.stderr.write(msg)
+    sys.exit(status)
+
+
+def read_config(filename: str):
     """Parse the named config file and return an config object"""
 
     config = configparser.ConfigParser()
-    config.read(filename)
+    try:
+        config.read_file(open(filename))
+    except FileNotFoundError as err:
+        msg = f"{type(err).__name__}: {err}\n"
+        error_exit(1, msg)
+    except configparser.MissingSectionHeaderError as err:
+        msg = f"{type(err).__name__}: {err}\n"
+        error_exit(2, msg)
     return config
 
 
