@@ -1,7 +1,11 @@
 # folio-template-python
 Scaffolding for FOLIO scripts in Python
 
-## Required modules
-Available via PIP
-* [FolioClient](https://github.com/FOLIO-FSE/FolioClient)
-* requests
+## Requirements
+
+Install requirements through pip:
+
+```
+python -m pip install -r requirements.txt
+```
+
